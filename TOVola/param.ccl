@@ -60,6 +60,36 @@ KEYWORD TOVola_EOS_type "What EOS type are you using?"
 	"Piecewise" :: "Piecewise Polytrope"
 	"Tabulated" :: "Tabulated EOS"
 } "Simple"
+
+CCTK_REAL initial_velx "Value of the valencia velocity in the x-direction everywhere"
+{
+  *:*
+} 0.0
+
+CCTK_REAL initial_vely "Value of the valencia velocity in the y-direction everywhere"
+{
+  *:*
+} 0.0
+
+CCTK_REAL initial_velz "Value of the valencia velocity in the z-direction everywhere"
+{
+  *:*
+} 0.0
+
+CCTK_REAL initial_shiftx "Value of the shift in the x-direction everywhere"
+{
+  *:*
+} 0.0
+
+CCTK_REAL initial_shifty "Value of the shift in the y-direction everywhere"
+{
+  *:*
+} 0.0
+
+CCTK_REAL initial_shiftz "Value of the shift in the z-direction everywhere"
+{
+  *:*
+} 0.0
 #################################################################################################################
 
 

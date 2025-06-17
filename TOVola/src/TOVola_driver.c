@@ -319,9 +319,9 @@ void TOVola_Solve_and_Interp(CCTK_ARGUMENTS) {
       press[i3d] = TOVola_press_local;
       eps[i3d] = TOVola_eps_local;
       w_lorentz[i3d] = 1.0;
-      vel[i3d_vx] = 0.0; // velocities are zero, as this is a static solution.
-      vel[i3d_vy] = 0.0;
-      vel[i3d_vz] = 0.0;
+      vel[i3d_vx] = initial_velx;
+      vel[i3d_vy] = initial_vely;
+      vel[i3d_vz] = initial_velz;
     }
     if (CCTK_EQUALS(initial_data, "TOVola")) {
       gxx[i3d] = TOVola_gxx_local;
@@ -338,9 +338,9 @@ void TOVola_Solve_and_Interp(CCTK_ARGUMENTS) {
       kyz[i3d] = 0.0;
     }
     if (CCTK_EQUALS(initial_shift, "TOVola")) {
-      betax[i3d] = 0.0;
-      betay[i3d] = 0.0;
-      betaz[i3d] = 0.0;
+      betax[i3d] = initial_shiftx;
+      betay[i3d] = initial_shifty;
+      betaz[i3d] = initial_shiftz;
     }
     if (CCTK_EQUALS(initial_lapse, "TOVola")) {
       alp[i3d] = TOVola_alp_local;
