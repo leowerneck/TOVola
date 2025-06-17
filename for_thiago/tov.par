@@ -1,0 +1,238 @@
+# .-------------------------------------------------.
+# | Baikal+IllinoisGRMHD Tabulated SFHo EOS TOV run |
+# .-------------------------------------------------.
+#
+#-------------Thorn activation-------------
+ActiveThorns = "
+
+  ADMBase
+  ADMCoupling
+  ADMMacros
+  AEILocalInterp
+  Baikal
+  Boundary
+  Carpet
+  CarpetInterp
+  CarpetIOASCII
+  CarpetIOBasic
+  CarpetIOHDF5
+  CarpetIOScalar
+  CarpetLib
+  CarpetReduce
+  CarpetRegrid2
+  CarpetSlab
+  CartGrid3D
+  CoordBase
+  CoordGauge
+  GenericFD
+  GSL
+  HDF5
+  HydroBase
+  InitBase
+  IOUtil
+  LocalInterp
+  LocalReduce
+  LoopControl
+  MoL
+  MPI
+  NewRad
+  Slab
+  SpaceMask
+  StaticConformal
+  SummationByParts
+  SymBase
+  TerminationTrigger
+  Time
+  TmunuBase
+  Vectors
+
+  GRHayLib
+  GRHayLHD
+  TOVola
+
+"
+
+#---------Cactus---------
+Cactus::cctk_run_title     = "Baikal_GRHayLHD_TOVola"
+Cactus::cctk_full_warnings = "yes"
+Cactus::terminate          = "time"
+Cactus::cctk_final_time    = 2030 #more or less 6 ms # divide by ~203 to get ms
+
+#---------ADMBase---------
+ADMBase::evolution_method         = "Baikal"
+ADMBase::lapse_evolution_method   = "Baikal"
+ADMBase::shift_evolution_method   = "Baikal"
+ADMBase::dtlapse_evolution_method = "Baikal"
+ADMBase::dtshift_evolution_method = "Baikal"
+ADMBase::initial_data             = "TOVola"
+ADMBase::initial_lapse            = "TOVola"
+ADMBase::initial_shift            = "zero"
+ADMBase::initial_dtlapse          = "zero"
+ADMBase::initial_dtshift          = "zero"
+ADMBase::metric_type              = "physical"
+ADMBase::metric_timelevels        = 3
+ADMBase::lapse_timelevels         = 3
+ADMBase::shift_timelevels         = 3
+
+#---------ADMMacros---------
+ADMMacros::spatial_order = 4
+
+#---------Baikal---------
+Baikal::diss_strength = 0.2
+Baikal::eta           = 1.0/1.38844844330251e-01
+
+#---------Boundary---------
+Boundary::radpower = 2
+
+#---------Carpet---------
+Carpet::init_fill_timelevels     = "yes"
+Carpet::domain_from_coordbase    = "yes"
+Carpet::use_buffer_zones         = "yes"
+Carpet::enable_all_storage       = "no"
+Carpet::check_for_poison         = "no"
+Carpet::init_3_timelevels        = "no"
+Carpet::poison_new_timelevels    = "yes"
+Carpet::storage_verbose          = "no"
+Carpet::verbose                  = "no"
+Carpet::veryverbose              = "no"
+Carpet::convergence_level        = 0
+Carpet::ghost_size               = 3
+Carpet::output_timers_every      = 512
+Carpet::prolongation_order_space = 5
+Carpet::prolongation_order_time  = 2
+Carpet::max_refinement_levels    = 1
+
+#---------CarpetInterp---------
+CarpetInterp::check_tree_search = "no"
+CarpetInterp::tree_search       = "yes"
+
+#---------CarpetLib---------
+CarpetLib::support_staggered_operators = "yes"
+CarpetLib::combine_recompose           = "no"
+CarpetLib::print_memstats_every        = -1
+
+#---------CartGrid3D---------
+CartGrid3D::avoid_origin = "no"
+CartGrid3D::type         = "CoordBase"
+
+#---------CoordBase---------
+CoordBase::boundary_size_x_lower = 3
+CoordBase::boundary_size_y_lower = 3
+CoordBase::boundary_size_z_lower = 3
+CoordBase::boundary_size_x_upper = 3
+CoordBase::boundary_size_y_upper = 3
+CoordBase::boundary_size_z_upper = 3
+CoordBase::domainsize            = "minmax"
+CoordBase::spacing               = "gridspacing"
+
+# The values below are set to match Spritz
+$r_max          = 2.0
+CoordBase::dx   = $r_max / 36
+CoordBase::dy   = CoordBase::dx
+CoordBase::dz   = CoordBase::dx
+CoordBase::xmax = +$r_max
+CoordBase::ymax = +$r_max
+CoordBase::zmax = +$r_max
+CoordBase::xmin = -$r_max
+CoordBase::ymin = -$r_max
+CoordBase::zmin = -$r_max
+
+#---------HydroBase---------
+HydroBase::initial_hydro       = "TOVola"
+HydroBase::timelevels          = 1
+HydroBase::prolongation_type   = "none"
+
+#---------GRHayLib---------
+GRHayLib::eos_type                    = "Hybrid"
+GRHayLib::neos                        = 1
+GRHayLib::k_ppoly0                    = 1
+GRHayLib::Gamma_ppoly_in[0]           = 2
+GRHayLib::Gamma_th                    = 1.75
+GRHayLib::con2prim_routine            = "Noble2D"
+GRHayLib::con2prim_backup_routines[0] = "Palenzuela1D"
+GRHayLib::con2prim_backup_routines[1] = "Noble1D"
+GRHayLib::con2prim_backup_routines[2] = "Font1D"
+GRHayLib::rho_b_atm                   = 1e-12
+
+#---------GRHayLHD---------
+GRHayLHD::Convert_to_HydroBase_every = 1
+
+#---------InitBase---------
+InitBase::initial_data_setup_method = "init_some_levels"
+
+#---------MoL---------
+MoL::run_MoL_PostStep_in_Post_Recover_Variables = "no"
+MoL::ODE_Method                                 = "rk4"
+MoL::MoL_Intermediate_Steps                     = 4
+MoL::MoL_Num_Scratch_Levels                     = 1
+
+#---------SpaceMask---------
+SpaceMask::use_mask = "yes"
+
+#---------Time---------
+Time::dtfac = 0.5 # == 0.5 (Courant factor) * (1/2)^N_repeats (from time_refinement_factors above)
+
+#---------TOVola---------
+# Star will always be at the origin
+TOVola::initial_velx    = +0.1
+TOVola::initial_vely    = 0.0
+TOVola::initial_velz    = 0.0
+TOVola::initial_shiftx  = -0.1
+TOVola::initial_shifty  = 0.0
+TOVola::initial_shiftz  = 0.0
+
+#---------TmunuBase---------
+TmunuBase::stress_energy_storage = "yes"
+TmunuBase::stress_energy_at_RHS  = "yes"
+TmunuBase::timelevels            =  1
+TmunuBase::prolongation_type     = none
+
+# .----------------------.
+# | Output configuration |
+# .----------------------.
+
+#---------IOUtil---------
+IOUtil::out_dir                         = "$parfile"
+IOUtil::checkpoint_on_terminate         = "no"
+IOUtil::out_fileinfo                    = "none"
+IOUtil::parfile_write                   = "generate"
+
+#---------CarpetIOASCII---------
+$ascii_output_every = 16
+
+CarpetIOASCII::one_file_per_group = "no"
+
+CarpetIOASCII::out1D_d     = "no"
+CarpetIOASCII::out1D_dir   = "$parfile/ascii_1d"
+CarpetIOASCII::out1D_every = $ascii_output_every
+CarpetIOASCII::out1D_vars  = "
+  HydroBase::rho
+  HydroBase::Y_e
+  HydroBase::temperature
+  HydroBase::eps
+  HydroBase::entropy
+  HydroBase::press
+  ADMBase::lapse
+  Baikal::HGF
+  Baikal::MU0GF
+  Baikal::MU1GF
+  Baikal::MU2GF
+"
+
+CarpetIOASCII::out2D_dir   = "$parfile/ascii_2d"
+CarpetIOASCII::out2D_every = $ascii_output_every
+CarpetIOASCII::out2D_vars  = "
+  Baikal::HGF
+  Baikal::MU0GF
+  Baikal::MU1GF
+  Baikal::MU2GF
+  HydroBase::rho
+  HydroBase::Y_e
+  HydroBase::temperature
+  HydroBase::eps
+  HydroBase::entropy
+  HydroBase::press
+"
+
+CarpetIOASCII::out3D_ghosts           = "no"
+CarpetIOASCII::output_symmetry_points = "no"
